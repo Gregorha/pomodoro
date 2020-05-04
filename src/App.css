@@ -1,0 +1,8 @@
+.App {
+  text-align: center;
+}
+
+.global-container{
+  background-color: rgb(1, 51, 51);
+  background-image: linear-gradient(rgb(1, 51, 51), rgb(15, 163, 107))
+}
