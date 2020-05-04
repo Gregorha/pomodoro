@@ -243,7 +243,7 @@ class PomodoroClock extends React.Component {
 
         <div className='row'>
           <div className='container mt-4 col-12 col-md-4 ml-auto'>
-            <h2 className='text-center text-head'>Config</h2>
+            <h2 className='text-center text-head'>Configurações</h2>
             <div className='mt-4'>
               {calculateButton}
 
