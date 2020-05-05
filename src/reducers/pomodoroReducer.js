@@ -1,5 +1,5 @@
 import Duration from 'luxon/src/duration.js';
-import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE } from '../actions/actionType'
+import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_TICK, TIMER_START } from '../actions/actionType'
 import importantEvents from '../components/pomodoro/importantEvents'
 
 const { DateTime } = require("luxon");
@@ -18,6 +18,9 @@ const initialState = {
   nextImportantEvent: importantEvents[0].date,
   index: Math.floor(Math.random() * 4),
   sessionIndex: 0,
+  classDay: DateTime.local().setLocale('pt-br').weekdayLong,
+  teste: Duration.fromObject({ minutes: 25 }),
+  end: DateTime.local().set({ milliseconds: 0 }).plus(Duration.fromObject({ minutes: 25 }))
 }
 
 const pomodoroReducer = (state = initialState, action) => {
@@ -67,15 +70,18 @@ const pomodoroReducer = (state = initialState, action) => {
         longBreakLength: 20,
         timerLabel: "Sessão de Estudo",
         timeLeft: Duration.fromObject({ minutes: 25 }),
-        startPauseLabel: "Começar"
+        startPauseLabel: "Começar",
+        teste: Duration.fromObject({ minutes: 25 })
 
       }
 
     case TIMER:
-      const now = DateTime.local().set({ milliseconds: 0 })
+      let now = DateTime.local().set({ milliseconds: 0 });
+      const Tend = DateTime.local().set({ milliseconds: 0 }).plus(state.timeLeft)
       return {
         ...state,
-        timeLeft: Duration.fromObject(action.end.diff(now, ['minutes', 'seconds']).toObject()),
+        timeLeft: Duration.fromObject(Tend.diff(now, ['minutes', 'seconds']).toObject()),
+        end:Tend
       }
 
     case NEW_SESSION:
@@ -100,9 +106,9 @@ const pomodoroReducer = (state = initialState, action) => {
     case CALCULATE_BREAKS:
       return {
         ...state,
-        sessionLength: Math.floor(action.sessionAndBreak / 6 * 5),
-        breakLength: Math.floor(action.sessionAndBreak / 6),
-        timeLeft: Duration.fromObject({ minutes: Math.floor(action.sessionAndBreak / 6 * 5) }),
+        sessionLength: Math.floor(action.sessionAndBreaks / 6 * 5),
+        breakLength: Math.floor(action.sessionAndBreaks / 6),
+        timeLeft: Duration.fromObject({ minutes: Math.floor(action.sessionAndBreaks / 6 * 5) }),
         calcMessage: "Pronto para começar a sessão de estudos!"
       }
 
@@ -120,10 +126,25 @@ const pomodoroReducer = (state = initialState, action) => {
 
     case NEXT_QUOTE:
       return {
-
+        ...state,
         index: Math.floor(Math.random() * 4),
         sessionIndex: state.reseted ? 0 : state.timerLabel === "Sessão de Estudo" ? 1 : state.timerLabel === "Pausa Curta" ? 2 : 3
 
+      }
+    
+    case TIMER_START:
+
+    return {
+      ...state,
+      end: DateTime.local().set({ milliseconds: 0 }).plus(state.timeLeft)
+    }
+
+    case TIMER_TICK:
+
+      const Tnow = DateTime.local().set({ milliseconds: 0 })
+      return{
+        ...state,
+        timeLeft: Duration.fromObject(state.end.diff(Tnow, ['minutes', 'seconds']).toObject())
       }
 
     default:
