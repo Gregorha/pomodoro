@@ -6,7 +6,7 @@ import importantEvents from "./importantEvents.js"
 import boopboop from '../media/inflicted.mp3'
 import './pomodoroStyle.css'
 import { connect } from 'react-redux'
-import { toggleTimer, resetTimer, handleTimer, handleNewSession } from '../../actions/index'
+import { toggleTimer, resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop } from '../../actions/index'
 import Button from 'react-bootstrap/Button'
 
 const { DateTime } = require("luxon");
@@ -14,26 +14,8 @@ const { DateTime } = require("luxon");
 class PomodoroClock extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      sessionLength: 25,
-      breakLength: 5,
-      longBreakLength: 20,
-      timerLabel: "Sessão de Estudo",
-      timeLeft: Duration.fromObject({ minutes: 25 }),
-      sessions: 0,
-      classDay: DateTime.local().setLocale('pt-br').weekdayLong,
-      nextImportantEvent: importantEvents[0].date,
-      calcMessage: "Vimos que você está em horário de aula, gostaria de calcular automaticamente os próximos intervalos?",
-      index: Math.floor(Math.random() * 4),
-      sessionIndex: 0,
-      startStop: 'reset',
-      startPause: 'pause',
 
-    }
-    this.nextQuote = this.nextQuote.bind(this)
     this.reset = this.reset.bind(this)
-    this.startTimer = this.startTimer.bind(this)
-    this.timer = this.timer.bind(this)
     this.handleStart = this.handleStart.bind(this)
     this.calculateBreaks = this.calculateBreaks.bind(this)
     this.handleTrybeMessages = this.handleTrybeMessages.bind(this)
@@ -49,78 +31,72 @@ class PomodoroClock extends React.Component {
     }
   }
 
-  handleTrybeMessages() {
-    const hour = DateTime.local().hour
-    const minutes = DateTime.local().minute
-    this.setState({
-      trybeMessages: hour === 19 && minutes < 20 ?
-        "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma" :
-        hour === 19 && minutes >= 20 && minutes < 40 ?
-          "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento" :
-          hour === 19 && minutes >= 40 ?
-            "Você deveria estar no fechamento do dia, corre pro zoom!!!" :
-            "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!"
-    })
-  }
-
-  timer(end) {
-
+  componentDidUpdate(){
+    const end = this.props.end
     const now = DateTime.local().set({ milliseconds: 0 })
     const endCorrected = end.plus({ seconds: 1 })
     if (this.checkDateTime()) {
       this.nextEventHandler()
     }
 
-    this.props.handleTimer(end)
-
     document.title = this.props.timeLeft.toFormat("mm ss").replace(/\s/, ":")
 
-    if (+endCorrected === +now && this.props.sessions !== 4) {
+    if (+endCorrected <= +now && this.props.sessions !== 4) {
       this.props.handleNewSession(false)
-
       this.handleTrybeMessages()
       this.audioRef.play()
-      this.startTimer()
+      this.props.start()
+      this.props.nextQuote()
     }
-    else if (+endCorrected === +now && this.props.sessions === 4) {
+    else if (+endCorrected <= +now && this.props.sessions === 4) {
       this.props.handleNewSession(true)
-
       this.audioRef.play()
-      this.startTimer()
+      this.props.start()
+      this.props.nextQuote()
     }
+
   }
+
+  handleTrybeMessages() {
+    const hour = DateTime.local().hour
+    const minutes = DateTime.local().minute
+    this.props.handleTrybeMessage(hour === 19 && minutes < 20 ?
+      "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma" :
+      hour === 19 && minutes >= 20 && minutes < 40 ?
+        "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento" :
+        hour === 19 && minutes >= 40 ?
+          "Você deveria estar no fechamento do dia, corre pro zoom!!!" :
+          "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!")
+  }
+
 
   handleStart() {
     this.props.toggleTimer()
 
-    this.startTimer()
-  }
+    this.props.start()
 
-  startTimer() {
-    if (this.timerID && this.props.running) {
-      clearInterval(this.timerID)
+    if (this.props.running) {
+      this.props.stop()
     }
     else {
-      const end = DateTime.local().set({ milliseconds: 0 }).plus(this.props.timeLeft)
-      this.timerID = setInterval(() => { this.timer(end) }, 1000)
-      this.nextQuote()
+      this.props.nextQuote()
     }
   }
 
   reset() {
     this.props.resetTimer();
-    this.audioRef.pause()
-    this.audioRef.currentTime = 0
-    clearInterval(this.timerID)
+    this.audioRef.pause();
+    this.audioRef.currentTime = 0;
+    this.props.stop()
 
-    this.nextQuote()
+    this.props.nextQuote()
   }
 
   checkDateTime() {
     const weekDay = DateTime.local().weekday
     const hour = DateTime.local().hour
     if (weekDay >= 1 && weekDay <= 5) {
-      if (hour >= 14 && hour < 20) {
+      if (hour >= 10 && hour < 20) {
         return true
       }
       else {
@@ -133,7 +109,7 @@ class PomodoroClock extends React.Component {
   }
 
   calculateBreaks() {
-    const timeToNextEvent = this.state.nextImportantEvent.diffNow(['minutes']).toObject().minutes
+    const timeToNextEvent = this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes
     let sessionAndBreak = timeToNextEvent / 4
 
     if (this.checkDateTime()) {
@@ -142,49 +118,30 @@ class PomodoroClock extends React.Component {
           sessionAndBreak = timeToNextEvent / i
         }
       }
-      if (this.state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
+      if (this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
         this.handleTrybeMessages()
       }
       else {
-        this.setState({
-          sessionLength: Math.floor(sessionAndBreak / 6 * 5),
-          breakLength: Math.floor(sessionAndBreak / 6),
-          timeLeft: Duration.fromObject({ minutes: Math.floor(sessionAndBreak / 6 * 5) }),
-          calcMessage: "Pronto para começar a sessão de estudos!"
-        })
+        this.props.calculateBreaks(sessionAndBreak)
       }
     }
   }
 
   nextEventHandler() {
-    const { nextImportantEvent } = this.state
     const date = DateTime.local()
     const hour = DateTime.local().hour
     const minutes = DateTime.local().minute
-    const eventHour = nextImportantEvent.hour
-    const eventMinutes = nextImportantEvent.minute
+    const eventHour = this.props.nextImportantEvent.hour
+    const eventMinutes = this.props.nextImportantEvent.minute
 
     if (hour > eventHour || (hour === eventHour && minutes >= eventMinutes)) {
       for (let i = 0; i < importantEvents.length - 1; i++) {
         if (importantEvents[i].date < date) {
-          this.setState({
-            nextImportantEvent: importantEvents[i + 1].date
-          })
+          this.props.handleNextEvent(i+1)
         }
       }
     }
   }
-
-  nextQuote() {
-    this.setState((state) => {
-      return {
-        index: Math.floor(Math.random() * 4),
-        sessionIndex: state.startStop === "reset" ? 0 : state.timerLabel === "Sessão de Estudo" ? 1 : state.timerLabel === "Pausa Curta" ? 2 : 3
-      }
-
-    })
-  }
-
 
   render() {
     let calculateButton;
@@ -196,7 +153,7 @@ class PomodoroClock extends React.Component {
           </button>
           <div className="collapse" id="collapseExample">
             <div className="card card-body">
-              <h3>{this.state.calcMessage}</h3>
+              <h3>{this.props.calcMessage}</h3>
               <button className="btn-calculate" onClick={this.calculateBreaks}>Calcular</button>
             </div>
           </div>
@@ -204,10 +161,10 @@ class PomodoroClock extends React.Component {
     }
     let btnArray = ['start_pause', 'reset']
     let startStopButton = btnArray.map((element) => (
-      <Button variant="outline-light" key={element} className={element === 'reset' && this.props.reset ? "btn-start btn-outline-light start-stop hide"
-        : element === 'reset' ? 'btn-start reset btn-outline-light start-stop'
-          : element === 'start_pause' && this.props.reset ? 'btn-start btn-outline-light start-stop'
-            : "btn-start btn-outline-light start-stop start-pause"}
+      <Button variant="outline-light" key={element} className={element === 'reset' && this.props.reset ? "btn-start start-stop hide"
+        : element === 'reset' ? 'btn-start reset start-stop'
+          : element === 'start_pause' && this.props.reset ? 'btn-start start-stop'
+            : "btn-start start-stop start-pause"}
 
         onClick={element === 'start_pause' ? () => { this.handleStart() } : () => { this.reset() }}
       >
@@ -231,8 +188,7 @@ class PomodoroClock extends React.Component {
 
           <div className='container phrase-wrap'>
             <div className='text-center'>
-              <RandomQuoteGenerator label={this.state.timerLabel}
-                onOff={this.state.startStop} index={this.state.index} sessionIndex={this.state.sessionIndex} />
+              <RandomQuoteGenerator />
             </div>
           </div>
 
@@ -248,34 +204,29 @@ class PomodoroClock extends React.Component {
               {calculateButton}
 
               <TimerSetter
-                length={this.state.breakLength}
                 label="Pausa Curta"
                 labelId="break-label"
                 increment="break-increment"
                 decrement="break-decrement"
                 lengthId="break-length"
-                handleTimer={this.handleTimer}
-                timeLeft={this.timeLeft} />
+                />
 
               <TimerSetter
-                length={this.state.longBreakLength}
                 label="Pausa Longa"
                 labelId="long-break-label"
                 increment="long-break-increment"
                 decrement="long-break-decrement"
                 lengthId="long-break-length"
-                handleTimer={this.handleTimer}
-                timeLeft={this.timeLeft} />
+                />
 
               <TimerSetter
-                length={this.state.sessionLength}
                 label="Sessão de Estudo"
                 labelId="session-label"
                 increment="session-increment"
                 decrement="session-decrement"
                 lengthId="session-length"
-                handleTimer={this.handleTimer}
-                timeLeft={this.timeLeft} />
+                />
+
             </div>
           </div>
         </div>
@@ -295,11 +246,14 @@ const mapState = (state) => {
     timeLeft: state.pomodoro.timeLeft,
     sessions: state.pomodoro.sessions,
     timerLabel: state.pomodoro.timerLabel,
-    startPauseLabel: state.pomodoro.startPauseLabel
+    startPauseLabel: state.pomodoro.startPauseLabel,
+    nextImportantEvent: state.pomodoro.nextImportantEvent,
+    end: state.pomodoro.end,
+    calcMessage: state.pomodoro.calcMessage
   }
 }
 
 export default connect(
   mapState,
-  { toggleTimer, resetTimer, handleTimer, handleNewSession }
+  { toggleTimer, resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop }
 )(PomodoroClock);
