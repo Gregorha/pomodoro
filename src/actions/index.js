@@ -1,4 +1,5 @@
-import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO, UPDATE_DISPLAY, ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION } from './actionType.js'
+import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO, UPDATE_DISPLAY, ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_START, TIMER_TICK, TIMER_STOP } from './actionType.js'
+
 
 export const addTodo = (task, newId) =>({
   type: ADD_TODO,
@@ -40,12 +41,49 @@ export const resetTimer = (label) => ({
   type: RESET,
 })
 
-export const handleTimer = (end) => ({
+export const handleTimer = () => ({
   type: TIMER,
-  end: end
 })
 
 export const handleNewSession = (isLongBreak) => ({
   type: NEW_SESSION,
   isLongBreak: isLongBreak
 })
+
+export const calculateBreaks = (sessionAndBreaks) => ({
+  type: CALCULATE_BREAKS,
+  sessionAndBreaks: sessionAndBreaks
+})
+
+export const handleTrybeMessage = (message) => ({
+  type: TRYBE_MESSAGE,
+  message: message
+})
+
+export const handleNextEvent = (value) => ({
+  type: NEXT_EVENT,
+  value: value
+})
+
+export const nextQuote = () => ({
+  type: NEXT_QUOTE,
+})
+
+let timer = null;
+
+export const start = (end) => (dispatch) => {
+  clearInterval(timer);
+  dispatch({ type: TIMER_START });
+  timer = setInterval(() => dispatch(tick(end)), 1000);
+  // dispatch(tick(end))
+}
+
+const tick = (end) => ({ 
+  type: TIMER_TICK,
+  end: end,
+})
+
+export const stop = () => {
+  clearInterval(timer);
+  return { type: TIMER_STOP };
+}
