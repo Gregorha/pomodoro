@@ -8,7 +8,7 @@ const allPhrases = [
 ,
 [
   {quote: "Hora de botar o celular de lado e estudar."},
-  {quote: "Agora é pra ignorar qualquer distração!"},
+  {quote: "Agora é para ignorar qualquer distração!"},
   {quote: "Momento de foco total agora!"},
   {quote: "Vamos lá, hora de estudar, só para quando ouvir o alarme!"}
 ],
