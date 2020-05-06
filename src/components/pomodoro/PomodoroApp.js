@@ -15,11 +15,11 @@ class PomodoroClock extends React.Component {
   constructor(props) {
     super(props)
 
-    this.reset = this.reset.bind(this)
-    this.handleStart = this.handleStart.bind(this)
-    this.calculateBreaks = this.calculateBreaks.bind(this)
-    this.handleTrybeMessages = this.handleTrybeMessages.bind(this)
-    this.nextEventHandler = this.nextEventHandler.bind(this)
+    this.reset = this.reset.bind(this);
+    this.handleStart = this.handleStart.bind(this);
+    this.calculateBreaks = this.calculateBreaks.bind(this);
+    this.handleTrybeMessages = this.handleTrybeMessages.bind(this);
+    this.nextEventHandler = this.nextEventHandler.bind(this);
     this.setAudioRef = element => {
       this.audioRef = element;
     };
@@ -31,42 +31,43 @@ class PomodoroClock extends React.Component {
     }
   }
 
-  componentDidUpdate(){
-    const end = this.props.end
-    const now = DateTime.local().set({ milliseconds: 0 })
-    const endCorrected = end.plus({ seconds: 1 })
+  componentDidUpdate() {
+    const end = this.props.end;
+    const now = DateTime.local().set({ milliseconds: 0 });
+    const endCorrected = end.plus({ seconds: 1 });
     if (this.checkDateTime()) {
-      this.nextEventHandler()
+      this.nextEventHandler();
     }
 
-    document.title = this.props.timeLeft.toFormat("mm ss").replace(/\s/, ":")
+    document.title = this.props.timeLeft.toFormat("mm ss").replace(/\s/, ":");
 
     if (+endCorrected <= +now && this.props.sessions !== 4) {
-      this.props.handleNewSession(false)
-      this.handleTrybeMessages()
-      this.audioRef.play()
-      this.props.start()
-      this.props.nextQuote()
+      this.props.handleNewSession(false);
+      this.handleTrybeMessages();
+      this.audioRef.play();
+      this.props.start();
+      this.props.nextQuote();
     }
+
     else if (+endCorrected <= +now && this.props.sessions === 4) {
-      this.props.handleNewSession(true)
-      this.audioRef.play()
-      this.props.start()
-      this.props.nextQuote()
+      this.props.handleNewSession(true);
+      this.audioRef.play();
+      this.props.start();
+      this.props.nextQuote();
     }
 
   }
 
   handleTrybeMessages() {
-    const hour = DateTime.local().hour
-    const minutes = DateTime.local().minute
+    const hour = DateTime.local().hour;
+    const minutes = DateTime.local().minute;
     this.props.handleTrybeMessage(hour === 19 && minutes < 20 ?
-      "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma" :
-      hour === 19 && minutes >= 20 && minutes < 40 ?
-        "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento" :
-        hour === 19 && minutes >= 40 ?
-          "Você deveria estar no fechamento do dia, corre pro zoom!!!" :
-          "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!")
+      "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma"
+      : hour === 19 && minutes >= 20 && minutes < 40 ?
+        "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento"
+        : hour === 19 && minutes >= 40 ?
+          "Você deveria estar no fechamento do dia, corre pro zoom!!!"
+          : "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!")
   }
 
 
@@ -86,14 +87,13 @@ class PomodoroClock extends React.Component {
     this.props.resetTimer();
     this.audioRef.pause();
     this.audioRef.currentTime = 0;
-    this.props.stop()
-
-    this.props.nextQuote()
+    this.props.stop();
+    this.props.nextQuote();
   }
 
   checkDateTime() {
-    const weekDay = DateTime.local().weekday
-    const hour = DateTime.local().hour
+    const weekDay = DateTime.local().weekday;
+    const hour = DateTime.local().hour;
     if (weekDay >= 1 && weekDay <= 5) {
       if (hour >= 14 && hour < 20) {
         return true
@@ -108,35 +108,35 @@ class PomodoroClock extends React.Component {
   }
 
   calculateBreaks() {
-    const timeToNextEvent = this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes
-    let sessionAndBreak = timeToNextEvent / 4
+    const timeToNextEvent = this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes;
+    let sessionAndBreak = timeToNextEvent / 4;
 
     if (this.checkDateTime()) {
       if (sessionAndBreak < 20) {
         for (let i = 3; sessionAndBreak < 20; i--) {
-          sessionAndBreak = timeToNextEvent / i
+          sessionAndBreak = timeToNextEvent / i;
         }
       }
       if (this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
-        this.handleTrybeMessages()
+        this.handleTrybeMessages();
       }
       else {
-        this.props.calculateBreaks(sessionAndBreak)
+        this.props.calculateBreaks(sessionAndBreak);
       }
     }
   }
 
   nextEventHandler() {
-    const date = DateTime.local()
-    const hour = DateTime.local().hour
-    const minutes = DateTime.local().minute
-    const eventHour = this.props.nextImportantEvent.hour
-    const eventMinutes = this.props.nextImportantEvent.minute
+    const date = DateTime.local();
+    const hour = DateTime.local().hour;
+    const minutes = DateTime.local().minute;
+    const eventHour = this.props.nextImportantEvent.hour;
+    const eventMinutes = this.props.nextImportantEvent.minute;
 
     if (hour > eventHour || (hour === eventHour && minutes >= eventMinutes)) {
       for (let i = 0; i < importantEvents.length - 1; i++) {
         if (importantEvents[i].date < date) {
-          this.props.handleNextEvent(i+1)
+          this.props.handleNextEvent(i + 1);
         }
       }
     }
@@ -152,11 +152,11 @@ class PomodoroClock extends React.Component {
           </button>
           <div className="collapse" id="collapseExample">
             <div className="card card-body">
-              <div className = "row">
-                <div className = "col-12 col-md-10">
+              <div className="row">
+                <div className="col-12 col-md-10">
                   <h3>{this.props.calcMessage}</h3>
                 </div>
-                <div className = "col-12 col-md-2">
+                <div className="col-12 col-md-2">
                   <button className="btn-calculate" onClick={this.calculateBreaks}>Calcular</button>
                 </div>
               </div>

@@ -9,7 +9,7 @@ import TimerSetter from '../pomodoro/TimerSettings.js'
 class TodoList extends React.Component {
   constructor(props) {
     super(props)
-    this.updateDisplayStatus = this.updateDisplayStatus.bind(this)
+    this.updateDisplayStatus = this.updateDisplayStatus.bind(this);
   }
 
   updateDisplayStatus(string) {
