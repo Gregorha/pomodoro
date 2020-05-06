@@ -1,5 +1,5 @@
 import Duration from 'luxon/src/duration.js';
-import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_TICK, TIMER_START } from '../actions/actionType'
+import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_TICK, TIMER_START, TIMER_STOP } from '../actions/actionType'
 import importantEvents from '../components/pomodoro/importantEvents'
 
 const { DateTime } = require("luxon");
@@ -136,6 +136,9 @@ const pomodoroReducer = (state = initialState, action) => {
 
     return {
       ...state,
+      running: true,
+      reseted: false,
+      startPauseLabel: "Pausar",
       end: DateTime.local().set({ milliseconds: 0 }).plus(state.timeLeft)
     }
 
@@ -145,6 +148,13 @@ const pomodoroReducer = (state = initialState, action) => {
       return{
         ...state,
         timeLeft: Duration.fromObject(state.end.diff(Tnow, ['minutes', 'seconds']).toObject())
+      }
+
+    case TIMER_STOP:
+      return{
+        ...state,
+        running: false,
+        startPauseLabel: "Começar" 
       }
 
     default:
