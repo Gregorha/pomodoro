@@ -8,7 +8,8 @@
   background-color: white;
   overflow: auto;
   font-size: 1.5em;
-  border: 1px solid rgb(1, 51, 51);
+  border: 1px solid white;
+  color: rgb(15, 51, 51);
 }
 
 .list-nav-buttons {
@@ -16,13 +17,13 @@
   justify-content: space-between;
 }
 
-.todo-wrapper {
-  background-color: white;
+.todo-settings-wrapper {
+  background-color: transparent;
   padding-bottom: 40px;
 }
 
 .btn-outline-success1 {
-  color: rgb(1, 51, 51);
+  color: white;
   display: inline-block;
   font-weight: 400;
   text-align: center;
@@ -31,7 +32,7 @@
   -webkit-user-select: none;
   user-select: none;
   background-color: transparent;
-  border: 1.5px solid  rgb(1, 51, 51);
+  border: 1.5px solid  white;
   padding: .375rem .75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -41,13 +42,13 @@
 
 .btn-outline-success1:hover {
   color:white;
-  background-color: rgb(15, 163, 107);
+  background-color: rgb(15, 51, 51);
   border-color: rgb(15, 163, 107);
 }
 
 .selected {
   color:white;
-  background-color: rgb(15, 163, 107);
+  background-color: rgb(15, 51, 51);
   border-color: rgb(15, 163, 107);
 }
 
@@ -56,7 +57,7 @@
 }
 
 .header1 {
-  color: rgb(1, 51, 51);
+  color: white;
 }
 
 .bi-x{
@@ -69,4 +70,12 @@
 
 .bi-check{
   color:  rgb(15, 163, 107);
+}
+
+@media (min-width: 768px){
+  
+  .list-nav-buttons {
+    justify-content: space-around;
+  }
+  
 }
