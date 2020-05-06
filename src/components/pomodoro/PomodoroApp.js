@@ -6,7 +6,7 @@ import importantEvents from "./importantEvents.js"
 import boopboop from '../media/inflicted.mp3'
 import './pomodoroStyle.css'
 import { connect } from 'react-redux'
-import { toggleTimer, resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop } from '../../actions/index'
+import { resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop } from '../../actions/index'
 import Button from 'react-bootstrap/Button'
 
 const { DateTime } = require("luxon");
@@ -71,7 +71,6 @@ class PomodoroClock extends React.Component {
 
 
   handleStart() {
-    this.props.toggleTimer()
 
     this.props.start()
 
@@ -96,7 +95,7 @@ class PomodoroClock extends React.Component {
     const weekDay = DateTime.local().weekday
     const hour = DateTime.local().hour
     if (weekDay >= 1 && weekDay <= 5) {
-      if (hour >= 14 && hour < 20) {
+      if (hour >= 14 && hour < 23) {
         return true
       }
       else {
@@ -153,8 +152,14 @@ class PomodoroClock extends React.Component {
           </button>
           <div className="collapse" id="collapseExample">
             <div className="card card-body">
-              <h3>{this.props.calcMessage}</h3>
-              <button className="btn-calculate" onClick={this.calculateBreaks}>Calcular</button>
+              <div className = "row">
+                <div className = "col-12 col-md-10">
+                  <h3>{this.props.calcMessage}</h3>
+                </div>
+                <div className = "col-12 col-md-2">
+                  <button className="btn-calculate" onClick={this.calculateBreaks}>Calcular</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -196,39 +201,8 @@ class PomodoroClock extends React.Component {
             {startStopButton}
           </div>
         </div>
-
-        <div className='row'>
-          <div className='container mt-4 col-12 col-md-4 ml-auto'>
-            <h2 className='text-center text-head'>Configurações</h2>
-            <div className='mt-4'>
-              {calculateButton}
-
-              <TimerSetter
-                label="Pausa Curta"
-                labelId="break-label"
-                increment="break-increment"
-                decrement="break-decrement"
-                lengthId="break-length"
-                />
-
-              <TimerSetter
-                label="Pausa Longa"
-                labelId="long-break-label"
-                increment="long-break-increment"
-                decrement="long-break-decrement"
-                lengthId="long-break-length"
-                />
-
-              <TimerSetter
-                label="Sessão de Estudo"
-                labelId="session-label"
-                increment="session-increment"
-                decrement="session-decrement"
-                lengthId="session-length"
-                />
-
-            </div>
-          </div>
+        <div>
+          {calculateButton}
         </div>
         <audio id="beep" preload="auto" ref={this.setAudioRef} src={boopboop} />
       </div>
@@ -255,5 +229,5 @@ const mapState = (state) => {
 
 export default connect(
   mapState,
-  { toggleTimer, resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop }
+  { resetTimer, handleTimer, handleNewSession, calculateBreaks, handleTrybeMessage, handleNextEvent, nextQuote, start, stop }
 )(PomodoroClock);

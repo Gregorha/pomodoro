@@ -4,6 +4,7 @@ import Task from './Tasks'
 import './todoListStyle.css'
 import { connect } from 'react-redux'
 import { removeTodo, toggleComplete, updateDisplay } from '../../actions/index'
+import TimerSetter from '../pomodoro/TimerSettings.js'
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -45,16 +46,53 @@ class TodoList extends React.Component {
       </button>
     ))
     return (
-      <div className='container todo-wrapper mt-3'>
-        <div className='text-center pt-3 header1'><h2>Lista de Tarefas</h2></div>
-        <TodoInput
-          className='mt-3'
-        />
-        <div className='list-nav-buttons'>
-          {navButtons}
-        </div>
-        <div className="list container mt-3">
-          {ListDisplay}
+      <div className='container todo-settings-wrapper mt-1 pb-5'>
+
+        <div className='row'>
+          
+          <div className='container mt-4 col-12 col-md-8 ml-auto todo-wrapper'>
+            <div className='text-center pt-3 header1'><h2>Lista de Tarefas</h2></div>
+            <TodoInput
+              className='mt-3'
+            />
+            <div className='list-nav-buttons'>
+              {navButtons}
+            </div>
+            <div className="list container mt-3">
+              {ListDisplay}
+            </div>
+          </div>
+
+          <div className='container mt-4 col-12 col-md-4 ml-auto'>
+            <h2 className='text-center text-head'>Configurações</h2>
+            <div className='mt-4'>
+
+              <TimerSetter
+                label="Pausa Curta"
+                labelId="break-label"
+                increment="break-increment"
+                decrement="break-decrement"
+                lengthId="break-length"
+              />
+
+              <TimerSetter
+                label="Pausa Longa"
+                labelId="long-break-label"
+                increment="long-break-increment"
+                decrement="long-break-decrement"
+                lengthId="long-break-length"
+              />
+
+              <TimerSetter
+                label="Sessão de Estudo"
+                labelId="session-label"
+                increment="session-increment"
+                decrement="session-decrement"
+                lengthId="session-length"
+              />
+
+            </div>
+          </div>
         </div>
       </div>
     )
