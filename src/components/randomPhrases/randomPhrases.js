@@ -4,13 +4,13 @@ const allPhrases = [
   {quote: "Vamos Começar?"},
   {quote: "Pronto para mais uma sessão de foco total?"},
   {quote: "Se arrume na cadeira, bloqueie o celular e vamos começar!"},
-  {quote: "Já fez seu ciclo pomodoro de hoje? Bora!"}]
+  {quote: "Preparado? Vamos lá!"}]
 ,
 [
-  {quote: "Bota esse celular de lado e estuda meu filho!"},
-  {quote: "Ta me lendo por quê? É hora de estudarrr!!!"},
+  {quote: "Hora de botar o celular de lado e estudar."},
+  {quote: "Agora é pra ignorar qualquer distração!"},
   {quote: "Momento de foco total agora!"},
-  {quote: "Bora bora, hora de estudar, só para quando ouvir o alarme!"}
+  {quote: "Vamos lá, hora de estudar, só para quando ouvir o alarme!"}
 ],
 [
   {quote: "Hora de levantar e alongar!"},
@@ -20,7 +20,7 @@ const allPhrases = [
 ],
 [
   {quote: "Agora sim, hora de dar uma boa descansada!"},
-  {quote: "Parabéns pelo esforço!! Hora de dar uma limpada no cérebro"},
+  {quote: "Parabéns pelo esforço!! Hora de limpar um pouco a mente."},
   {quote: "Chegou a tão esperada pausa longa! Uma medição pode ser ótimo!"},
   {quote: "Hora de ver aquele vídeo no youtube, ou dar uma olhada no instagram!"}
 ]
