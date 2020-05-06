@@ -98,7 +98,7 @@ class PomodoroClock extends React.Component {
     const weekDay = DateTime.local().weekday;
     const hour = DateTime.local().hour;
     if (weekDay >= 1 && weekDay <= 5) {
-      if (hour >= 10 && hour < 20) {
+      if (hour >= 14 && hour < 20) {
         return true
       }
       else {
