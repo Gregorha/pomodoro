@@ -73,13 +73,13 @@ class PomodoroClock extends React.Component {
 
   handleStart() {
 
-    this.props.start()
+    this.props.start();
 
     if (this.props.running) {
-      this.props.stop()
+      this.props.stop();
     }
     else {
-      this.props.nextQuote()
+      this.props.nextQuote();
     }
   }
 
