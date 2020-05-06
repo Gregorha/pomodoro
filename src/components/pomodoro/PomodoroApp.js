@@ -18,7 +18,7 @@ class PomodoroClock extends React.Component {
     this.reset = this.reset.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.calculateBreaks = this.calculateBreaks.bind(this);
-    this.handleTrybeMessages = this.handleTrybeMessages.bind(this);
+    this.handleTrybeMessages = this.handleImportantEventMessages.bind(this);
     this.nextEventHandler = this.nextEventHandler.bind(this);
     this.setAudioRef = element => {
       this.audioRef = element;
@@ -38,15 +38,16 @@ class PomodoroClock extends React.Component {
     if (this.checkDateTime()) {
       this.nextEventHandler();
     }
+    this.handleImportantEventMessages();
 
     document.title = this.props.timeLeft.toFormat("mm ss").replace(/\s/, ":");
 
     if (+endCorrected <= +now && this.props.sessions !== 4) {
       this.props.handleNewSession(false);
-      this.handleTrybeMessages();
       this.audioRef.play();
       this.props.start();
       this.props.nextQuote();
+      this.handleImportantEventMessages();
     }
 
     else if (+endCorrected <= +now && this.props.sessions === 4) {
@@ -54,11 +55,12 @@ class PomodoroClock extends React.Component {
       this.audioRef.play();
       this.props.start();
       this.props.nextQuote();
+      this.handleImportantEventMessages();
     }
 
   }
 
-  handleTrybeMessages() {
+  handleImportantEventMessages() {
     const hour = DateTime.local().hour;
     const minutes = DateTime.local().minute;
     this.props.handleTrybeMessage(hour === 19 && minutes < 20 ?
@@ -80,6 +82,7 @@ class PomodoroClock extends React.Component {
     }
     else {
       this.props.nextQuote();
+      this.handleImportantEventMessages(); 
     }
   }
 
@@ -95,7 +98,7 @@ class PomodoroClock extends React.Component {
     const weekDay = DateTime.local().weekday;
     const hour = DateTime.local().hour;
     if (weekDay >= 1 && weekDay <= 5) {
-      if (hour >= 14 && hour < 20) {
+      if (hour >= 10 && hour < 20) {
         return true
       }
       else {
@@ -110,19 +113,24 @@ class PomodoroClock extends React.Component {
   calculateBreaks() {
     const timeToNextEvent = this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes;
     let sessionAndBreak = timeToNextEvent / 4;
-
+    console.log(timeToNextEvent)
+    console.log(this.checkDateTime())
+    console.log(sessionAndBreak < 20 && timeToNextEvent > 20)
     if (this.checkDateTime()) {
-      if (sessionAndBreak < 20) {
+      if (sessionAndBreak < 20 && timeToNextEvent > 20) {
         for (let i = 3; sessionAndBreak < 20; i--) {
           sessionAndBreak = timeToNextEvent / i;
+          console.log(sessionAndBreak)
         }
-      }
-      if (this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
-        this.handleTrybeMessages();
-      }
-      else {
         this.props.calculateBreaks(sessionAndBreak);
       }
+      else if (sessionAndBreak > 20){
+        this.props.calculateBreaks(sessionAndBreak);
+      }
+      else{
+        this.props.calculateBreaks(30);
+      }
+      this.handleImportantEventMessages();  
     }
   }
 

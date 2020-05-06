@@ -1,4 +1,4 @@
-import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO, UPDATE_DISPLAY, ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_START, TIMER_TICK, TIMER_STOP } from './actionType.js'
+import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO, UPDATE_DISPLAY, ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, IMPORTANT_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_START, TIMER_TICK, TIMER_STOP, CALC_MESSAGE } from './actionType.js'
 
 
 export const addTodo = (task, newId) =>({
@@ -56,8 +56,12 @@ export const calculateBreaks = (sessionAndBreaks) => ({
 })
 
 export const handleTrybeMessage = (message) => ({
-  type: TRYBE_MESSAGE,
+  type: IMPORTANT_MESSAGE,
   message: message
+})
+
+export const handleCalcMessage = () => ({
+  type: CALC_MESSAGE
 })
 
 export const handleNextEvent = (value) => ({

@@ -1,5 +1,5 @@
 import Duration from 'luxon/src/duration.js';
-import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, TRYBE_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_TICK, TIMER_START, TIMER_STOP } from '../actions/actionType'
+import { ADD_TIME, SUB_TIME, START_PAUSE, RESET, TIMER, NEW_SESSION, CALCULATE_BREAKS, IMPORTANT_MESSAGE, NEXT_EVENT, NEXT_QUOTE, TIMER_TICK, TIMER_START, TIMER_STOP, CALC_MESSAGE } from '../actions/actionType'
 import importantEvents from '../components/pomodoro/importantEvents'
 
 const { DateTime } = require("luxon");
@@ -12,9 +12,11 @@ const initialState = {
   timeLeft: Duration.fromObject({ minutes: 25 }),
   running: false,
   reseted: true,
+  closeToImportantEvent: false,
   sessions: 0,
   startPauseLabel: "Começar",
   calcMessage: "Vimos que você está em horário de aula, gostaria de calcular automaticamente os próximos intervalos?",
+  importantEventMessage: "",
   nextImportantEvent: importantEvents[0].date,
   index: Math.floor(Math.random() * 4),
   sessionIndex: 0,
@@ -65,13 +67,14 @@ const pomodoroReducer = (state = initialState, action) => {
         ...state,
         running: false,
         reseted: true,
+        closeToImportantEvent:false,
         sessionLength: 25,
         breakLength: 5,
         longBreakLength: 20,
         timerLabel: "Sessão de Estudo",
         timeLeft: Duration.fromObject({ minutes: 25 }),
         startPauseLabel: "Começar",
-        teste: Duration.fromObject({ minutes: 25 })
+        calcMessage: "Vimos que você está em horário de aula, gostaria de calcular automaticamente os próximos intervalos?",
 
       }
 
@@ -112,10 +115,25 @@ const pomodoroReducer = (state = initialState, action) => {
         calcMessage: "Pronto para começar a sessão de estudos!"
       }
 
-    case TRYBE_MESSAGE:
+    case IMPORTANT_MESSAGE:
+      if (state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
+        return {
+          ...state,
+          importantEventMessage: action.message,
+          closeToImportantEvent: true,
+        }
+      }
+      else{
+        return{
+          ...state,
+          closeToImportantEvent:false,
+        }
+      }
+
+    case CALC_MESSAGE:
       return {
         ...state,
-        calcMessage: action.message
+
       }
 
     case NEXT_EVENT:
@@ -128,7 +146,8 @@ const pomodoroReducer = (state = initialState, action) => {
       return {
         ...state,
         index: Math.floor(Math.random() * 4),
-        sessionIndex: state.reseted ? 0 : state.timerLabel === "Sessão de Estudo" ? 1 : state.timerLabel === "Pausa Curta" ? 2 : 3
+        sessionIndex: state.reseted ? 0 : state.timerLabel === "Sessão de Estudo" ? 1 : state.timerLabel === "Pausa Curta" ? 2 : 3,
+        closeToImportantEvent: false,
 
       }
     
