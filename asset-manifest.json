@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/pomodoro/static/css/main.4b68ea56.chunk.css",
-    "main.js": "/pomodoro/static/js/main.9cfaff65.chunk.js",
-    "main.js.map": "/pomodoro/static/js/main.9cfaff65.chunk.js.map",
+    "main.js": "/pomodoro/static/js/main.4d15be2f.chunk.js",
+    "main.js.map": "/pomodoro/static/js/main.4d15be2f.chunk.js.map",
     "runtime-main.js": "/pomodoro/static/js/runtime-main.a098e6ba.js",
     "runtime-main.js.map": "/pomodoro/static/js/runtime-main.a098e6ba.js.map",
     "static/css/2.69121389.chunk.css": "/pomodoro/static/css/2.69121389.chunk.css",
-    "static/js/2.83f42b11.chunk.js": "/pomodoro/static/js/2.83f42b11.chunk.js",
-    "static/js/2.83f42b11.chunk.js.map": "/pomodoro/static/js/2.83f42b11.chunk.js.map",
+    "static/js/2.bb2106c5.chunk.js": "/pomodoro/static/js/2.bb2106c5.chunk.js",
+    "static/js/2.bb2106c5.chunk.js.map": "/pomodoro/static/js/2.bb2106c5.chunk.js.map",
     "index.html": "/pomodoro/index.html",
-    "precache-manifest.189cb215a8513f4a99415fcb697b644f.js": "/pomodoro/precache-manifest.189cb215a8513f4a99415fcb697b644f.js",
+    "precache-manifest.a90f609b5d1ce986fb056889db361e67.js": "/pomodoro/precache-manifest.a90f609b5d1ce986fb056889db361e67.js",
     "service-worker.js": "/pomodoro/service-worker.js",
     "static/css/2.69121389.chunk.css.map": "/pomodoro/static/css/2.69121389.chunk.css.map",
     "static/css/main.4b68ea56.chunk.css.map": "/pomodoro/static/css/main.4b68ea56.chunk.css.map",
-    "static/js/2.83f42b11.chunk.js.LICENSE.txt": "/pomodoro/static/js/2.83f42b11.chunk.js.LICENSE.txt",
+    "static/js/2.bb2106c5.chunk.js.LICENSE.txt": "/pomodoro/static/js/2.bb2106c5.chunk.js.LICENSE.txt",
     "static/media/inflicted.mp3": "/pomodoro/static/media/inflicted.2d55e753.mp3"
   },
   "entrypoints": [
     "static/js/runtime-main.a098e6ba.js",
     "static/css/2.69121389.chunk.css",
-    "static/js/2.83f42b11.chunk.js",
+    "static/js/2.bb2106c5.chunk.js",
     "static/css/main.4b68ea56.chunk.css",
-    "static/js/main.9cfaff65.chunk.js"
+    "static/js/main.4d15be2f.chunk.js"
   ]
 }

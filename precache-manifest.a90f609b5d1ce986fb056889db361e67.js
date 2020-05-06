@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "bc7a9727e39f69b9a3bc75d589e54da3",
+    "revision": "2c64ce7127b99b30f0221a868535072a",
     "url": "/pomodoro/index.html"
   },
   {
-    "revision": "a9b48364abb87787b485",
+    "revision": "d56de2625819fa6ab3a6",
     "url": "/pomodoro/static/css/2.69121389.chunk.css"
   },
   {
-    "revision": "8c9a2f45c4c593fef63b",
+    "revision": "002091eabf6e01b37d18",
     "url": "/pomodoro/static/css/main.4b68ea56.chunk.css"
   },
   {
-    "revision": "a9b48364abb87787b485",
-    "url": "/pomodoro/static/js/2.83f42b11.chunk.js"
+    "revision": "d56de2625819fa6ab3a6",
+    "url": "/pomodoro/static/js/2.bb2106c5.chunk.js"
   },
   {
     "revision": "0c710714cc0812ad904dc577eda8f829",
-    "url": "/pomodoro/static/js/2.83f42b11.chunk.js.LICENSE.txt"
+    "url": "/pomodoro/static/js/2.bb2106c5.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8c9a2f45c4c593fef63b",
-    "url": "/pomodoro/static/js/main.9cfaff65.chunk.js"
+    "revision": "002091eabf6e01b37d18",
+    "url": "/pomodoro/static/js/main.4d15be2f.chunk.js"
   },
   {
     "revision": "42337fb65940131f50b9",
