@@ -119,9 +119,6 @@ button:focus {
   color: #0f3333;
   font-size: 2em;
   border: none;
-  position: absolute;
-  top: -65px;
-  right: 0;
 }
 
 .auto-calculate-wrapper{
