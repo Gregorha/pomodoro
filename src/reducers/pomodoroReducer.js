@@ -119,7 +119,7 @@ const pomodoroReducer = (state = initialState, action) => {
       const hour = DateTime.local().hour;
       const minutes = DateTime.local().minute;
 
-      if (state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15 && DateTime.local().set({ milliseconds: 0 }) < DateTime.local().set({ hours: 19, minutes: 50, seconds: 0, milliseconds: 0 })) {
+      if (state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15 && DateTime.local().set({ milliseconds: 0 }) < DateTime.local().set({ hours: 20, minutes: 0, seconds: 0, milliseconds: 0 })) {
         return {
           ...state,
           importantEventMessage: hour === 16 && minutes < 30 ?
