@@ -67,7 +67,7 @@ const pomodoroReducer = (state = initialState, action) => {
         ...state,
         running: false,
         reseted: true,
-        closeToImportantEvent:false,
+        closeToImportantEvent: false,
         sessionLength: 25,
         breakLength: 5,
         longBreakLength: 20,
@@ -84,7 +84,7 @@ const pomodoroReducer = (state = initialState, action) => {
       return {
         ...state,
         timeLeft: Duration.fromObject(Tend.diff(now, ['minutes', 'seconds']).toObject()),
-        end:Tend
+        end: Tend
       }
 
     case NEW_SESSION:
@@ -116,17 +116,28 @@ const pomodoroReducer = (state = initialState, action) => {
       }
 
     case IMPORTANT_MESSAGE:
-      if (state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15) {
+      const hour = DateTime.local().hour;
+      const minutes = DateTime.local().minute;
+
+      if (state.nextImportantEvent.diffNow(['minutes']).toObject().minutes < 15 && DateTime.local().set({ milliseconds: 0 }) < DateTime.local().set({ hours: 19, minutes: 50, seconds: 0, milliseconds: 0 })) {
         return {
           ...state,
-          importantEventMessage: action.message,
+          importantEventMessage: hour === 16 && minutes < 30 ?
+            "Já está quase no horário da aula síncrona, aproveite para abrir o zoom e se preparar para a aula!"
+            : hour === 19 && minutes < 20 ?
+              "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma"
+              : hour === 19 && minutes >= 20 && minutes < 40 ?
+                "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento"
+                : hour === 19 && minutes >= 40 ?
+                  "Você deveria estar no fechamento do dia, corre pro zoom!!!"
+                  : "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!",
           closeToImportantEvent: true,
         }
       }
-      else{
-        return{
+      else {
+        return {
           ...state,
-          closeToImportantEvent:false,
+          closeToImportantEvent: false,
         }
       }
 
@@ -150,30 +161,30 @@ const pomodoroReducer = (state = initialState, action) => {
         closeToImportantEvent: false,
 
       }
-    
+
     case TIMER_START:
 
-    return {
-      ...state,
-      running: true,
-      reseted: false,
-      startPauseLabel: "Pausar",
-      end: DateTime.local().set({ milliseconds: 0 }).plus(state.timeLeft)
-    }
+      return {
+        ...state,
+        running: true,
+        reseted: false,
+        startPauseLabel: "Pausar",
+        end: DateTime.local().set({ milliseconds: 0 }).plus(state.timeLeft)
+      }
 
     case TIMER_TICK:
 
       const Tnow = DateTime.local().set({ milliseconds: 0 })
-      return{
+      return {
         ...state,
         timeLeft: Duration.fromObject(state.end.diff(Tnow, ['minutes', 'seconds']).toObject())
       }
 
     case TIMER_STOP:
-      return{
+      return {
         ...state,
         running: false,
-        startPauseLabel: "Começar" 
+        startPauseLabel: "Começar"
       }
 
     default:

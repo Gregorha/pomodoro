@@ -18,7 +18,6 @@ class PomodoroClock extends React.Component {
     this.reset = this.reset.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.calculateBreaks = this.calculateBreaks.bind(this);
-    this.handleTrybeMessages = this.handleImportantEventMessages.bind(this);
     this.nextEventHandler = this.nextEventHandler.bind(this);
     this.setAudioRef = element => {
       this.audioRef = element;
@@ -38,7 +37,7 @@ class PomodoroClock extends React.Component {
     if (this.checkDateTime()) {
       this.nextEventHandler();
     }
-    this.handleImportantEventMessages();
+    this.props.handleTrybeMessage();
 
     document.title = this.props.timeLeft.toFormat("mm ss").replace(/\s/, ":");
 
@@ -47,7 +46,7 @@ class PomodoroClock extends React.Component {
       this.audioRef.play();
       this.props.start();
       this.props.nextQuote();
-      this.handleImportantEventMessages();
+      this.props.handleTrybeMessage();
     }
 
     else if (+endCorrected <= +now && this.props.sessions === 4) {
@@ -55,21 +54,9 @@ class PomodoroClock extends React.Component {
       this.audioRef.play();
       this.props.start();
       this.props.nextQuote();
-      this.handleImportantEventMessages();
+      this.props.handleTrybeMessage();
     }
 
-  }
-
-  handleImportantEventMessages() {
-    const hour = DateTime.local().hour;
-    const minutes = DateTime.local().minute;
-    this.props.handleTrybeMessage(hour === 19 && minutes < 20 ?
-      "Já está quase no horário de preenchimento do forms, aproveite esse tempo para preencher com calma"
-      : hour === 19 && minutes >= 20 && minutes < 40 ?
-        "Está no horário de preencher o forms, hora de dar uma descansada, enviar seus feedbacks e se preparar para o fechamento"
-        : hour === 19 && minutes >= 40 ?
-          "Você deveria estar no fechamento do dia, corre pro zoom!!!"
-          : "Você está próximo de um momento síncrono, hora de finalizar suas tarefas e se preparar, corre pro zoom!!!")
   }
 
 
@@ -82,7 +69,7 @@ class PomodoroClock extends React.Component {
     }
     else {
       this.props.nextQuote();
-      this.handleImportantEventMessages(); 
+      this.props.handleTrybeMessage(); 
     }
   }
 
@@ -111,16 +98,13 @@ class PomodoroClock extends React.Component {
   }
 
   calculateBreaks() {
+    this.props.stop();
     const timeToNextEvent = this.props.nextImportantEvent.diffNow(['minutes']).toObject().minutes;
     let sessionAndBreak = timeToNextEvent / 4;
-    console.log(timeToNextEvent)
-    console.log(this.checkDateTime())
-    console.log(sessionAndBreak < 20 && timeToNextEvent > 20)
     if (this.checkDateTime()) {
       if (sessionAndBreak < 20 && timeToNextEvent > 20) {
         for (let i = 3; sessionAndBreak < 20; i--) {
           sessionAndBreak = timeToNextEvent / i;
-          console.log(sessionAndBreak)
         }
         this.props.calculateBreaks(sessionAndBreak);
       }
@@ -130,7 +114,7 @@ class PomodoroClock extends React.Component {
       else{
         this.props.calculateBreaks(30);
       }
-      this.handleImportantEventMessages();  
+      this.props.handleTrybeMessage();  
     }
   }
 
