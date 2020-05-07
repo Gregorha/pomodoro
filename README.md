@@ -10,3 +10,6 @@ This project tries to implement the method in this single page application. The 
 - Redux
 - Bootstrap
 - Luxon
+
+## [Link to live version](http://google.com)
+
