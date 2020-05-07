@@ -11,5 +11,5 @@ This project tries to implement the method in this single page application. The 
 - Bootstrap
 - Luxon
 
-## [Link to live version](http://google.com)
+## [Link to live version](https://gregorha.github.io/pomodoro/)
 
