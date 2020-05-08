@@ -4,7 +4,7 @@ Pomodoro is a time management method that splits the work time in full concentra
 
 This project tries to implement the method in this single page application. The app does the basic timer functionalities plus additional features, as sending messages for the user reminding what he should do on the on going session and a auto calculate option for Trybe Students if they are using during class time.
 
-## Frameworks used
+## Libraries used
 
 - React
 - Redux
